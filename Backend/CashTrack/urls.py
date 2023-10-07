@@ -16,16 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from CashTrackApp import views
+from CashTrackApp.views import AccountView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', views.hello, name='hello'),
-    path('create/', views.create_my_account, name='create_my_account'),
-    path('findall/', views.get_all_my_accounts, name='get_my_account'),
-    path('findbyid/<int:account_id>/', views.get_account_by_id, name='get_account_by_id'),
-    path('update/<int:pk>/', views.update_my_account, name='update_my_account'),
-    path('delete/<int:pk>/', views.delete_my_account, name='delete_my_account'),
+    path('account/create/', AccountView.create_my_account, name='create_my_account'),
+    path('account/findall/', AccountView.get_all_my_accounts, name='get_my_account'),
+    path('account/findbyid/<int:account_id>/', AccountView.get_account_by_id, name='get_account_by_id'),
+    path('account/update/<int:pk>/', AccountView.update_my_account, name='update_my_account'),
+    path('account/delete/<int:pk>/', AccountView.delete_my_account, name='delete_my_account'),
 
 
 ]

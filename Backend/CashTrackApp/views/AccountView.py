@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .serializers import AccountSerializer
+from ..serializers import AccountSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Account
+from ..models.AccountModel import Account
 def hello(request):
     return JsonResponse({'message': 'Hello, Django!'})
 # Create your views here.
@@ -25,6 +25,7 @@ def get_all_my_accounts(request):
         serializer = AccountSerializer(my_accounts, many=True)
 
         return Response(serializer.data)
+        
 @api_view(['GET'])
 def get_account_by_id(request, account_id):
     try:

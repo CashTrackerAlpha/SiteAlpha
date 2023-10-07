@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Account
+from .models.AccountModel import Account
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:

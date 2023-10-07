@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
+import { UserContext } from '../UserContext';
 
 export const Register = (props) => {
   const navigate = useNavigate(); 
 
+  const { userData, setUserData } = useContext(UserContext);
   const [username, setUserName] = useState("");
   const [pass, setPass] = useState("");
   const [fullname, setFullName] = useState("");
@@ -22,16 +24,21 @@ export const Register = (props) => {
     };
 
     try {
+      console.log(JSON.stringify(userData));
       const response = await fetch("http://127.0.0.1:8080/users/new", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
-      });
+      }
+      );
 
       if (response.ok) {
-        navigate("/", { state: { message: `Thanks for registering ${username}` } });
+        const userDataFromResponse = await response.json();
+        console.log("UserData from API:", userDataFromResponse);
+        setUserData(userDataFromResponse);
+        navigate("/Main", { state: { message: `Thanks for registering ${username}` } });
       } else {
         console.error("Registration failed");
       }

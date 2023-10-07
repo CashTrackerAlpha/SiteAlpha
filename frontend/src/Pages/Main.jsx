@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { UserContext } from '../UserContext';
-import { useNavigate } from "react-router-dom";
 
 const Main = () => {
-}
+  return (
+    <div className='flex items-center justify-center h-screen'>
+      <div className='text-4xl font-bold text-blue-900'>Main Page</div>
+    </div>
+  );
+};
 
 export default Main;

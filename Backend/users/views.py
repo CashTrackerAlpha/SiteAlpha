@@ -86,3 +86,15 @@ def login_custom_user(request):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
     return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['DELETE'])
+def delete_all_CustomUsers(request):
+    try:
+        custom_users = CustomUser.objects.all()
+        
+        custom_users.delete()
+
+        return Response({'message': 'All CustomUser entries have been deleted.'}, status=status.HTTP_204_NO_CONTENT)
+    except CustomUser.DoesNotExist:
+        return Response({'error': 'No CustomUser entries found'}, status=status.HTTP_404_NOT_FOUND)

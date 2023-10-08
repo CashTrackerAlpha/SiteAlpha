@@ -14,9 +14,9 @@ const Nav = () => {
           <li className='ml-5'>
             <Link
               className='text-xl text-white font-bold no-underline hover:opacity-80'
-              to='/About'
+              to='/Budget'
             >
-              About
+              Budget
             </Link>
           </li>
           <li className='ml-5'>

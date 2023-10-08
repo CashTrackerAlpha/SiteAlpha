@@ -25,4 +25,5 @@ urlpatterns = [
     path('user/update/<int:pk>/', CustomUserView.update_my_CustomUser, name='update_my_CustomUser'),
     path('user/delete/<int:pk>/', CustomUserView.delete_my_CustomUser, name='delete_my_CustomUser'),
     path('user/login/', CustomUserView.login_custom_user, name='login_my_CustomUser'),
+    path('user/deleteall/', CustomUserView.delete_all_CustomUsers, name='delete_all_CustomUser')
 ]

@@ -14,17 +14,15 @@ export const Login = (props) => {
     e.preventDefault();
 
     const attemptData = {
-      id: null,
-      userName: username,
+      username: username,
       password: pass,
-      fullName: null,
+      fullname: null,
       email: null,
-      aquariums: null,
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8080/users/login", {
-        method: "PUT",
+      const response = await fetch("http://127.0.0.1:8000/user/login/", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CashtrackappConfig(AppConfig):
+class UsersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'CashTrackApp'
+    name = 'users'

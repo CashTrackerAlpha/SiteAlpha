@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 const Nav = () => {
   return (
-    <header className='w-full h-12 flex items-center justify-between bg-blue-900 sticky p-4'>
+    <header className='w-full h-12 flex items-center justify-between bg-green-500 sticky p-4'>
       <div className='text-xl text-white font-bold flex items-center'>
-        Finding Nemo
-        <img className='w-8 h-8 m-2' src={logo} alt='Fish' />
+        CashTrack
+        {/* <img className='w-8 h-8 m-2' src={logo} alt='Fish' /> */}
       </div>
       <nav>
         <ul className='list-none m-0 p-0 flex items-baseline'>
@@ -29,7 +29,7 @@ const Nav = () => {
           </li>
           <li className='ml-5'>
             <Link
-              className='text-xl text-yellow-400 font-bold no-underline hover:opacity-80'
+              className='text-xl text-white font-bold no-underline hover:opacity-80'
               to='/Login'
             >
               Login

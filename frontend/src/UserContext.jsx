@@ -4,9 +4,9 @@ const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const initialUserData = {
-    userName: null,
+    username: null,
     password: null,
-    fullName: null,
+    fullname: null,
     email: null,
   };
 

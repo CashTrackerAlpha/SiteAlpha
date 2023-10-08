@@ -15,15 +15,15 @@ export const Register = (props) => {
     e.preventDefault();
 
     const userData = {
-      userName: username,
+      username: username,
       password: pass,
-      fullName: fullname,
+      fullname: fullname,
       email: email,
     };
 
     try {
       console.log(JSON.stringify(userData));
-      const response = await fetch("http://127.0.0.1:8000/create/", {
+      const response = await fetch("http://127.0.0.1:8000/user/create/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

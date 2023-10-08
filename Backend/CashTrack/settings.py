@@ -20,17 +20,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n-6pdmq5yw&9g7tc#8s9jcgx85d1pq=vf4!!z&iv%^=7laf$i-'
+SECRET_KEY = 'django-insecure-6=m2nvv4yaw^ji+vf26$w8m)ho(c_o(tiukgkdzri9d*79+2km'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#SECURITY WARNING: don't run with the following settings turned on in production!
+ALLOWED_HOSTS = ['*']
 
-# settings.py
-
-
-
+AUTH_USER_MODEL = "users.CustomUser"
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'CashTrackApp',
+    'users',
     'corsheaders',
 ]
 
@@ -105,9 +103,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
+CORS_ORIGIN_WHITELIST = (
+    'https://localhost:5173',
+    'https://localhost:8000',
+    'http://localhost:5173',
+    'http://localhost:8000',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

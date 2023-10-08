@@ -16,15 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from CashTrackApp.views import AccountView
-
+from users import views as CustomUserView
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/create/', AccountView.create_my_account, name='create_my_account'),
-    path('account/findall/', AccountView.get_all_my_accounts, name='get_my_account'),
-    path('account/findbyid/<int:account_id>/', AccountView.get_account_by_id, name='get_account_by_id'),
-    path('account/update/<int:pk>/', AccountView.update_my_account, name='update_my_account'),
-    path('account/delete/<int:pk>/', AccountView.delete_my_account, name='delete_my_account'),
-
-
+    path('user/create/', CustomUserView.create_my_CustomUser, name='create_my_CustomUser'),
+    path('user/findall/', CustomUserView.get_all_my_CustomUsers, name='get_my_CustomUser'),
+    path('user/findbyid/<int:CustomUser_id>/', CustomUserView.get_CustomUser_by_id, name='get_CustomUser_by_id'),
+    path('user/update/<int:pk>/', CustomUserView.update_my_CustomUser, name='update_my_CustomUser'),
+    path('user/delete/<int:pk>/', CustomUserView.delete_my_CustomUser, name='delete_my_CustomUser'),
+    path('user/login/', CustomUserView.login_custom_user, name='login_my_CustomUser'),
 ]

@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users import views as CustomUserView
+from users import CustomUserView, BudgetView, BudgetEntryView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/create/', CustomUserView.create_my_CustomUser, name='create_my_CustomUser'),
@@ -25,5 +26,16 @@ urlpatterns = [
     path('user/update/<int:pk>/', CustomUserView.update_my_CustomUser, name='update_my_CustomUser'),
     path('user/delete/<int:pk>/', CustomUserView.delete_my_CustomUser, name='delete_my_CustomUser'),
     path('user/login/', CustomUserView.login_custom_user, name='login_my_CustomUser'),
-    path('user/deleteall/', CustomUserView.delete_all_CustomUsers, name='delete_all_CustomUser')
+
+    path('budget/create/', BudgetView.create_budget, name='create_budget'),
+    path('budget/findall/', BudgetView.get_all_budgets, name='get_all_budgets'),
+    path('budget/findbyid/<int:budget_id>/', BudgetView.get_budget_by_id, name='get_budget_by_id'),
+    path('budget/update/<int:pk>/', BudgetView.update_budget, name='update_budget'),
+    path('budget/delete/<int:pk>/', BudgetView.delete_budget, name='delete_budget'),
+
+    path('budgetentry/create/', BudgetEntryView.create_budget_entry, name='create_budget_entry'),
+    path('budgetentry/findall/', BudgetEntryView.get_all_budget_entries, name='get_all_budget_entries'),
+    path('budgetentry/findbyid/<int:budget_entry_id>/', BudgetEntryView.get_budget_entry_by_id, name='get_budget_entry_by_id'),
+    path('budgetentry/update/<int:pk>/', BudgetEntryView.update_budget_entry, name='update_budget_entry'),
+    path('budgetentry/delete/<int:pk>/', BudgetEntryView.delete_budget_entry, name='delete_budget_entry'),
 ]

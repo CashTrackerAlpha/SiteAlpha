@@ -6,7 +6,9 @@ from rest_framework.decorators import api_view
 from .serializers import CustomUserSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from .models import CustomUser
+
 
 @api_view(['POST'])
 def create_my_CustomUser(request):
@@ -73,28 +75,20 @@ def delete_my_CustomUser(request, pk):
 @api_view(['POST'])
 def login_custom_user(request):
     if request.method == 'POST':
-        print(request.data)
         username = request.data.get('username')
         password = request.data.get('password')
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user) 
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            login(request, user)
+            try:
+                token = Token.objects.get(user=user)
+            except Token.DoesNotExist:
+                token = Token.objects.create(user=user)
+
+            return Response({'token': token.key, 'message': 'Login successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
     return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-@api_view(['DELETE'])
-def delete_all_CustomUsers(request):
-    try:
-        custom_users = CustomUser.objects.all()
-        
-        custom_users.delete()
-
-        return Response({'message': 'All CustomUser entries have been deleted.'}, status=status.HTTP_204_NO_CONTENT)
-    except CustomUser.DoesNotExist:
-        return Response({'error': 'No CustomUser entries found'}, status=status.HTTP_404_NOT_FOUND)

@@ -18,3 +18,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class Budget(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    budgetname = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.user.email
+class BudgetEntry(models.Model):
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='expenses')
+    date = models.DateField()
+    recurrence= models.DurationField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Expense for {self.budget.budgetname}"

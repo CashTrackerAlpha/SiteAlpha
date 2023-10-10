@@ -12,14 +12,12 @@ export const Login = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const attemptData = {
       username: username,
       password: pass,
-      fullname: null,
-      email: null,
     };
-
+  
     try {
       const response = await fetch("http://127.0.0.1:8000/user/login/", {
         method: "POST",
@@ -28,13 +26,20 @@ export const Login = (props) => {
         },
         body: JSON.stringify(attemptData),
       });
-
+  
       if (response.ok) {
-        const userDataFromResponse = await response.json();
-        console.log("UserData from API:", userDataFromResponse);
-        setUserData(userDataFromResponse);
-        navigate("/Main", { state: { message: `Thanks for registering ${username}` } });
-        console.log(userData);
+        const responseData = await response.json();
+        const { token, user } = responseData;
+  
+        setUserData({
+          username: user.username,
+          fullname: user.fullname,
+          email: user.email,
+        });
+  
+        localStorage.setItem("authToken", token);
+  
+        navigate("/Main", { state: { message: `Thanks for logging in, ${username}` } });
       } else {
         console.error("Login failed");
       }
@@ -42,6 +47,7 @@ export const Login = (props) => {
       console.error("There was a problem with the login request", error);
     }
   };
+  
 
   return (
     <>

@@ -36,7 +36,8 @@ export const Register = (props) => {
         const userDataFromResponse = await response.json();
         console.log("UserData from API:", userDataFromResponse);
         setUserData(userDataFromResponse);
-        navigate("/Main", { state: { message: `Thanks for registering ${username}` } });
+        props.onFormSwitch("login");
+        navigate("/Login", { state: { message: `Thanks for registering ${username}` } });
       } else {
         console.error("Registration failed");
       }

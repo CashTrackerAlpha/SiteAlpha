@@ -2,14 +2,13 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
-from rest_framework.decorators import api_view
 from .serializers import CustomUserSerializer
+from .models import CustomUser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from .models import CustomUser
-
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 @api_view(['POST'])
 def create_my_CustomUser(request):
     if request.method == 'POST':
@@ -25,6 +24,7 @@ def create_my_CustomUser(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
+#@permission_classes([IsAuthenticated])
 def get_all_my_CustomUsers(request):
         my_CustomUsers = CustomUser.objects.all()
 
@@ -33,6 +33,7 @@ def get_all_my_CustomUsers(request):
         return Response(serializer.data)
         
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_CustomUser_by_id(request, CustomUser_id):
     try:
         CustomUser = CustomUser.objects.get(pk=CustomUser_id)
@@ -44,6 +45,7 @@ def get_CustomUser_by_id(request, CustomUser_id):
     return Response(serializer.data)
 
 @api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated])
 def update_my_CustomUser(request, pk):
     try:
         my_CustomUser = CustomUser.objects.get(pk=pk)
@@ -62,6 +64,7 @@ def update_my_CustomUser(request, pk):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_my_CustomUser(request, pk):
     try:
         my_CustomUser = CustomUser.objects.get(pk=pk)
@@ -72,6 +75,11 @@ def delete_my_CustomUser(request, pk):
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 @api_view(['POST'])
 def login_custom_user(request):
     if request.method == 'POST':
@@ -81,14 +89,19 @@ def login_custom_user(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)
-            try:
-                token = Token.objects.get(user=user)
-            except Token.DoesNotExist:
-                token = Token.objects.create(user=user)
+            Token.objects.filter(user=user).delete()
+            token, _ = Token.objects.get_or_create(user=user)
 
-            return Response({'token': token.key, 'message': 'Login successful'}, status=status.HTTP_200_OK)
+            user_data = {
+                'username': user.username,
+                'email': user.email,
+                'fullname': user.fullname,
+            }
+
+            return Response({'token': token.key, 'user': user_data, 'message': 'Login successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
     return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+

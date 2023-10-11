@@ -38,6 +38,7 @@ export const Login = (props) => {
         });
   
         localStorage.setItem("authToken", token);
+        console.log(localStorage.getItem("authToken"));
   
         navigate("/Main", { state: { message: `Thanks for logging in, ${username}` } });
       } else {

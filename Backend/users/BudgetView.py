@@ -1,8 +1,15 @@
-from rest_framework.decorators import api_view
+from django.shortcuts import render
+from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
-from django.shortcuts import get_object_or_404
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from .models import Budget
+from .models import CustomUser
 from .serializers import BudgetSerializer
 
 @api_view(['POST'])
@@ -50,6 +57,7 @@ def update_budget(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_budget(request, pk):
     try:
         budget = Budget.objects.get(pk=pk)
@@ -58,3 +66,16 @@ def delete_budget(request, pk):
 
     budget.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_budget_by_username(request, username):
+    
+    user = get_object_or_404(CustomUser, username=username)
+    try:
+        budget = Budget.objects.get(user=user)
+    except Budget.DoesNotExist:
+        return Response({'error': 'Budget not found for the specified username'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = BudgetSerializer(budget)
+    return Response(serializer.data,status=status.HTTP_200_OK)

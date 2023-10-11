@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import List from '../Components/List';
-
+import { UserContext } from '../UserContext';
 const App = () => {
-  const numbers = [1, 2, 3, 4, 5];
+  const { userData } = useContext(UserContext);
+  const [budgets, setBudgets] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(localStorage.getItem('authToken'))
+        const response = await fetch(`http://127.0.0.1:8000/budget/findbyusername/${userData.username}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${localStorage.getItem('authToken')}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setBudgets(data);
+        } else {
+          console.error('Failed to fetch budgets');
+        }
+      } catch (error) {
+        console.error('Error fetching budgets:', error);
+      }
+    };
+
+    fetchData();
+  }, [userData.username]);
 
   return (
     <div>
-      <h1>Numbers List</h1>
-      <List numbers={numbers} />
+      {budgets ? (
+        <div>
+          <h1>Budget for {userData.username}</h1>
+          <p>Budget Name: {budgets.budgetname}</p>
+        </div>
+      ) : (
+        <p>Loading budget...</p>
+      )}
     </div>
   );
 };

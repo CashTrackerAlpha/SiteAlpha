@@ -30,6 +30,7 @@ urlpatterns = [
     path('budget/create/', BudgetView.create_budget, name='create_budget'),
     path('budget/findall/', BudgetView.get_all_budgets, name='get_all_budgets'),
     path('budget/findbyid/<int:budget_id>/', BudgetView.get_budget_by_id, name='get_budget_by_id'),
+    path('budget/findbyusername/<str:username>/', BudgetView.get_budget_by_username, name='get_budget_by_username'),
     path('budget/update/<int:pk>/', BudgetView.update_budget, name='update_budget'),
     path('budget/delete/<int:pk>/', BudgetView.delete_budget, name='delete_budget'),
 

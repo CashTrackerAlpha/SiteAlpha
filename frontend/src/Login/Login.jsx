@@ -30,15 +30,16 @@ export const Login = (props) => {
       if (response.ok) {
         const responseData = await response.json();
         const { token, user } = responseData;
-  
+        console.log("UserData from API:", user);
         setUserData({
           username: user.username,
           fullname: user.fullname,
           email: user.email,
+          id: user.id,
         });
   
         localStorage.setItem("authToken", token);
-        console.log(localStorage.getItem("authToken"));
+        console.log(userData);
   
         navigate("/Main", { state: { message: `Thanks for logging in, ${username}` } });
       } else {

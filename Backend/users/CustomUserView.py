@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializerFull,CustomUserSerializerPartial
 from .models import CustomUser
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 @api_view(['POST'])
 def create_my_CustomUser(request):
     if request.method == 'POST':
-        serializer = CustomUserSerializer(data=request.data)
+        serializer = CustomUserSerializerFull(data=request.data)
         
         if serializer.is_valid():
             hashed_password = make_password(request.data.get('password'))
@@ -24,11 +24,11 @@ def create_my_CustomUser(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def get_all_my_CustomUsers(request):
         my_CustomUsers = CustomUser.objects.all()
 
-        serializer = CustomUserSerializer(my_CustomUsers, many=True)
+        serializer = CustomUserSerializerFull(my_CustomUsers, many=True)
 
         return Response(serializer.data)
         
@@ -36,11 +36,21 @@ def get_all_my_CustomUsers(request):
 @permission_classes([IsAuthenticated])
 def get_CustomUser_by_id(request, CustomUser_id):
     try:
-        CustomUser = CustomUser.objects.get(pk=CustomUser_id)
-    except CustomUser.DoesNotExist:
+        CustomUserFound = CustomUser.objects.get(pk=CustomUser_id)
+    except CustomUserFound.notExist:
         return Response({'error': 'CustomUser not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    serializer = CustomUserSerializer(CustomUser)
+    
+    username=CustomUserFound.username
+    fullname=CustomUserFound.fullname
+    email=CustomUserFound.email
+    id=CustomUserFound.id
+    user_data={
+        'username':username,
+        'fullname':fullname,
+        'email':email,
+        'id':id
+    }
+    serializer = CustomUserSerializerPartial(user_data)
 
     return Response(serializer.data)
 
@@ -53,7 +63,7 @@ def update_my_CustomUser(request, pk):
         return Response({'error': 'Object not found'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = CustomUserSerializer(my_CustomUser, data=request.data)
+        serializer = CustomUserSerializerFull(my_CustomUser, data=request.data)
     elif request.method == 'PATCH':
         serializer = CustomUser(my_CustomUser, data=request.data, partial=True)
 
@@ -96,6 +106,7 @@ def login_custom_user(request):
                 'username': user.username,
                 'email': user.email,
                 'fullname': user.fullname,
+                'id': user.id
             }
 
             return Response({'token': token.key, 'user': user_data, 'message': 'Login successful'}, status=status.HTTP_200_OK)

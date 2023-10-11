@@ -9,7 +9,7 @@ const App = () => {
     const fetchData = async () => {
       try {
         console.log(localStorage.getItem('authToken'))
-        const response = await fetch(`http://127.0.0.1:8000/budget/findbyusername/${userData.username}`, {
+        const response = await fetch(`http://127.0.0.1:8000/budget/findbyid/${userData.id}/`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',

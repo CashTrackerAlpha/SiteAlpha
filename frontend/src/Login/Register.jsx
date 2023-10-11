@@ -19,6 +19,7 @@ export const Register = (props) => {
       password: pass,
       fullname: fullname,
       email: email,
+      id: null,
     };
 
     try {

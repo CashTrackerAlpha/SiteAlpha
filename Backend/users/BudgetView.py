@@ -15,13 +15,22 @@ from .serializers import BudgetSerializer
 @api_view(['POST'])
 def create_budget(request):
     if request.method == 'POST':
-        serializer = BudgetSerializer(data=request.data)
+        budgetname = request.data.get('budgetname')
+        username = request.data.get('username')  
 
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if not budgetname or not username:
+            return Response({'error': 'Both budgetname and username are required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            custom_user = get_object_or_404(CustomUser, username=username)
+
+            budget = Budget.objects.create(user=custom_user, budgetname=budgetname)
+
+            return Response({'id': budget.id, 'budgetname': budget.budgetname}, status=status.HTTP_201_CREATED)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'CustomUser with the provided username does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 def get_all_budgets(request):
@@ -30,6 +39,7 @@ def get_all_budgets(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_budget_by_id(request, budget_id):
     try:
         budget = Budget.objects.get(pk=budget_id)
@@ -68,7 +78,7 @@ def delete_budget(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def get_budget_by_username(request, username):
     
     user = get_object_or_404(CustomUser, username=username)

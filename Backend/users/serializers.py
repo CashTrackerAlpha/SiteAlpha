@@ -2,10 +2,15 @@
 from rest_framework import serializers
 from .models import CustomUser, Budget, BudgetEntry
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class CustomUserSerializerFull(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__' 
+class CustomUserSerializerPartial(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email','fullname','id')
+        
 class BudgetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Budget

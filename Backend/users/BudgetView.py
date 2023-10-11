@@ -31,6 +31,7 @@ def create_budget(request):
             return Response({'error': 'CustomUser with the provided username does not exist'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 @api_view(['GET'])
 def get_all_budgets(request):
@@ -78,7 +79,6 @@ def delete_budget(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
 def get_budget_by_username(request, username):
     
     user = get_object_or_404(CustomUser, username=username)
